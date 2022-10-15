@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
-import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
+import { Link, Switch, Route, HashRouter } from "react-router-dom";
 import Minter from "./Minter";
 import Gallery from "./Gallery";
 import homeImage from "../../assets/home-img.png";
@@ -11,10 +11,13 @@ import CURRENT_USER_ID from "../index";
 
 function Header() {
   const [gallery, setGallery] = useState();
+  const [discoverGallery, setdiscover] = useState();
 
   async function getNFTs(){
     var userNFTS = await opend.getOwnerNFTs(CURRENT_USER_ID);
-      setGallery(<Gallery title="My NFT's" ids={userNFTS}/>);
+    setGallery(<Gallery title="My NFT's" ids={userNFTS}/>);
+    var listedNFTS = await opend.getListed();
+    setdiscover(<Gallery title="Discover" ids={listedNFTS}/>);
   };
 
   useEffect(() =>{
@@ -22,7 +25,7 @@ function Header() {
   }, [])
 
   return (
-    <BrowserRouter forceRefresh={true}>
+    <HashRouter>
       <div className="app-root-1">
         <header className="Paper-root AppBar-root AppBar-positionStatic AppBar-colorPrimary Paper-elevation4">
           <div className="Toolbar-root Toolbar-regular header-appBar-13 Toolbar-gutters">
@@ -55,7 +58,7 @@ function Header() {
           <img className="bottom-space" src={homeImage} />
         </Route>
         <Route path="/discover">
-          <h1>Discover</h1>
+          {discoverGallery}
         </Route>
         <Route path="/minter">
           <Minter />
@@ -64,7 +67,7 @@ function Header() {
           {gallery}
         </Route>
       </Switch>
-  </BrowserRouter>
+  </HashRouter>
   );
 }
 
