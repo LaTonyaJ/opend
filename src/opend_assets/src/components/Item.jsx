@@ -18,7 +18,7 @@ function Item(props) {
 
   const id = props.id;
 
-  var localHost = "http://127.0.0.1:8000/";
+  var localHost = "http://127.0.0.1:8080";
   var agent = new HttpAgent({
     host: localHost
   });
@@ -27,10 +27,10 @@ function Item(props) {
   let NFTActor;
 
   async function loadNFT(){
-
+    // console.log("id", id.toText())
     NFTActor = await Actor.createActor(idlFactory, {
       agent,
-      canisterId: id,
+      canisterId: id.toText(),
     });
 
     const name = await NFTActor.getName();
@@ -43,18 +43,23 @@ function Item(props) {
     setOwner(owner.toText());
     setImage(image);
 
-    const listed = await opend.isListed(props.id);
-    console.log("id", id)
-    console.log("listed", listed)
+    // console.log("id", id)
 
-    if(listed){
-      setBlur({filter: "blur(4px)"});
-      setOwner("OpenD");
-      setSellStatus("Listed");
-    }else{
-      setButton(<Button handleClick={handleSell} text={"Sell"}/>);
+    if (props.role == "collection"){
+      const listed = await opend.isListed(props.id);
+      console.log("listed", listed)
+
+      if(listed){
+        setBlur({filter: "blur(4px)"});
+        setOwner("OpenD");
+        setSellStatus("Listed");
+      }else{
+        setButton(<Button handleClick={handleSell} text={"Sell"}/>);
+      }
+    }else if (props.role == "discover"){
+      setButton(<Button handleClick={handleBuy} text={"Buy"}/>);
     }
-  };
+};
 
   useEffect(() =>{
     loadNFT();
@@ -83,6 +88,7 @@ function Item(props) {
     if(listingResult == "Success"){
       setSellStatus("Listed");
       const opendID = await opend.getCanisterId();
+      // console.log("Canister ID", opendID)
       const transferResult = await NFTActor.transferOwnership(opendID);
       console.log("transfer", transferResult);
       if(transferResult == "Success"){
@@ -92,6 +98,10 @@ function Item(props) {
         setLoader(true);
       }
     }
+  };
+
+  async function handleBuy(){
+    console.log("Buy triggered")
   }
 
   return (

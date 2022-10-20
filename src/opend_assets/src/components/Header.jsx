@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
-import { Link, Switch, Route, HashRouter } from "react-router-dom";
+import { Link, Switch, Route, BrowserRouter } from "react-router-dom";
 import Minter from "./Minter";
 import Gallery from "./Gallery";
 import homeImage from "../../assets/home-img.png";
@@ -15,17 +15,18 @@ function Header() {
 
   async function getNFTs(){
     var userNFTS = await opend.getOwnerNFTs(CURRENT_USER_ID);
-    setGallery(<Gallery title="My NFT's" ids={userNFTS}/>);
+    setGallery(<Gallery title="My NFT's" ids={userNFTS} role="collection" />);
+
     var listedNFTS = await opend.getListed();
-    setdiscover(<Gallery title="Discover" ids={listedNFTS}/>);
+    setdiscover(<Gallery title="Discover" ids={listedNFTS} role="discover" />);
   };
 
   useEffect(() =>{
     getNFTs();
-  }, [])
+  }, []);
 
   return (
-    <HashRouter>
+    <BrowserRouter autoRefresh={true}>
       <div className="app-root-1">
         <header className="Paper-root AppBar-root AppBar-positionStatic AppBar-colorPrimary Paper-elevation4">
           <div className="Toolbar-root Toolbar-regular header-appBar-13 Toolbar-gutters">
@@ -67,7 +68,7 @@ function Header() {
           {gallery}
         </Route>
       </Switch>
-  </HashRouter>
+  </BrowserRouter>
   );
 }
 

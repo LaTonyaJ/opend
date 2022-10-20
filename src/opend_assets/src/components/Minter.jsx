@@ -7,7 +7,7 @@ import { Principal } from "@dfinity/principal";
 function Minter() {
 
   const {register, handleSubmit} = useForm();
-  const [nftPrincipal, setnftPrincipal] = useState("");
+  const [nftPrincipal, setnftPrincipal] = useState();
   const [loaderHidden, setloader] = useState(true);
 
   async function onSubmit(data){
@@ -23,7 +23,7 @@ function Minter() {
     setloader(true);
   };
 
-  if(nftPrincipal == ""){
+  if(nftPrincipal == null){
   return (
     <div className="minter-container">
       <div hidden={loaderHidden} className="lds-ellipsis">
