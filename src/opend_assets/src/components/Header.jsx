@@ -14,19 +14,21 @@ function Header() {
   const [discoverGallery, setdiscover] = useState();
 
   async function getNFTs(){
-    var userNFTS = await opend.getOwnerNFTs(CURRENT_USER_ID);
+    const userNFTS = await opend.getOwnerNFTs(CURRENT_USER_ID);
+    console.log("collection", userNFTS)
     setGallery(<Gallery title="My NFT's" ids={userNFTS} role="collection" />);
 
-    var listedNFTS = await opend.getListed();
+    const listedNFTS = await opend.getListed();
+    console.log("listed", listedNFTS)
     setdiscover(<Gallery title="Discover" ids={listedNFTS} role="discover" />);
-  };
+  }
 
   useEffect(() =>{
     getNFTs();
   }, []);
 
   return (
-    <BrowserRouter autoRefresh={true}>
+    <BrowserRouter forceRefresh={true}>
       <div className="app-root-1">
         <header className="Paper-root AppBar-root AppBar-positionStatic AppBar-colorPrimary Paper-elevation4">
           <div className="Toolbar-root Toolbar-regular header-appBar-13 Toolbar-gutters">
